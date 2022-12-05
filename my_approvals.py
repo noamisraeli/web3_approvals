@@ -47,7 +47,7 @@ def get_event_signature(signature: str):
     return "0x" + k.hexdigest()
 
 def get_address_as_topic(address: str):
-    return '0x000000000000000000000000005e20fcf757b55d6e27dea9ba4f90c0b03ef852'
+    return '0x000000000000000000000000' + address[-40:]
 
 def validate_address(w3: Web3, address: str):
     assert w3.is_address(address)
@@ -58,10 +58,10 @@ def get_name_from_address(ns: ENS, address: str):
     }
     return MAPPING.get(address)
 
-    return ns.name(address) or address
+    return ns.name(address) or address # not working 
 
 if __name__ == '__main__':
-    ACCOUNT_ADDRESS = "0x005e20fCf757B55D6E27dEA9BA4f90C0B03ef852"
+    ACCOUNT_ADDRESS = "0x005e20fCf757B55D6E27dEA9BA4f90C0B03ef852" # TODO: from args
     
     API_KEY = "7e135dbc63904c30808f84ff52a92343"
 
@@ -79,7 +79,13 @@ if __name__ == '__main__':
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
     filter_by_approve_event = w3.eth.filter(
-        {'topics': [get_event_signature(APPROVAL_SIGNATUR), get_address_as_topic(ACCOUNT_ADDRESS)], 'fromBlock': 0})
+        {
+            'topics': [
+            get_event_signature(APPROVAL_SIGNATUR), 
+            get_address_as_topic(ACCOUNT_ADDRESS)
+            ], 
+            'fromBlock': 0
+    })
 
     codec: ABICodec = w3.codec
 
