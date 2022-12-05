@@ -14,8 +14,6 @@ from web3.middleware import geth_poa_middleware
 from eth_abi.codec import ABICodec
 from web3._utils.events import get_event_data
 
-APPROVAL_SIGNATUR = 'Approval(address,address,uint256)'
-
 E20_APPROVAL_ABI = {
             "anonymous": False,
             "inputs": [
@@ -39,11 +37,16 @@ E20_APPROVAL_ABI = {
             "type": "event"
         }
 
-def get_event_signature(signature: str):
+
+def get_signature_string_from_event_abi(event_abi):
+    return f"{event_abi.get('name')}{tuple(param['type'] for param in event_abi.get('inputs'))}".replace(" ", "").replace("'", "")
+
+def get_event_signature(event_abi):
+    signature_string = get_signature_string_from_event_abi(event_abi)
     import sha3
     k = sha3.keccak_256()
 
-    k.update(signature.encode())
+    k.update(signature_string.encode())
     return "0x" + k.hexdigest()
 
 def get_address_as_topic(address: str):
@@ -53,12 +56,16 @@ def validate_address(w3: Web3, address: str):
     assert w3.is_address(address)
 
 def get_name_from_address(ns: ENS, address: str):
-    MAPPING = {
-        '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45': 'Uniswap V3: Router 2'
-    }
-    return MAPPING.get(address)
+    name = ns.name(address) or address # not working 
 
-    return ns.name(address) or address # not working 
+    if name is None:
+        MAPPING = {
+            '0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45': 'Uniswap V3: Router 2'
+        }
+        return MAPPING.get(address)
+
+    else:
+        return name
 
 if __name__ == '__main__':
     ACCOUNT_ADDRESS = "0x005e20fCf757B55D6E27dEA9BA4f90C0B03ef852" # TODO: from args
@@ -81,7 +88,7 @@ if __name__ == '__main__':
     filter_by_approve_event = w3.eth.filter(
         {
             'topics': [
-            get_event_signature(APPROVAL_SIGNATUR), 
+            get_event_signature(E20_APPROVAL_ABI), 
             get_address_as_topic(ACCOUNT_ADDRESS)
             ], 
             'fromBlock': 0
