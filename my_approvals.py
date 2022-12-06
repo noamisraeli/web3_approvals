@@ -12,6 +12,7 @@ import logging
 import typing
 import json
 import sha3
+
 import pydantic
 
 import typer
@@ -27,29 +28,6 @@ from web3._utils.events import get_event_data
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.StreamHandler(sys.stdout))
  
-class ABIParam(pydantic.BaseModel):
-    indexed: bool
-    name: str
-    type: str
-
-
-class EventABI(pydantic.BaseModel):
-    inputs: typing.List[ABIParam]
-    name: str
-    type = 'event'
-
-    @property
-    def signature_string(self) -> str:
-        params_string = ",".join(param.type for param in self.inputs)
-        return f"{self.name}({params_string})"
-
-    @property
-    def signature_hex(self):
-        k = sha3.keccak_256()
-
-        k.update(self.signature_string.encode())
-        return "0x" + k.hexdigest() 
-
 E20_APPROVAL_ABI_JSON = """{
         "anonymous": false,
         "inputs": [
@@ -88,6 +66,32 @@ ADDRESS_TO_NAME_MAPPING = {
     '0x111111125434b319222CdBf8C261674aDB56F3ae': '1inch v2: Aggregation Router',
     '0xECf0bdB7B3F349AbfD68C3563678124c5e8aaea3': 'Kyber: Staking'
 }
+
+
+
+class ABIParam(pydantic.BaseModel):
+    indexed: bool
+    name: str
+    type: str
+
+
+class EventABI(pydantic.BaseModel):
+    inputs: typing.List[ABIParam]
+    name: str
+    type = 'event'
+
+    @property
+    def signature_string(self) -> str:
+        params_string = ",".join(param.type for param in self.inputs)
+        return f"{self.name}({params_string})"
+
+    @property
+    def signature_hex(self):
+        k = sha3.keccak_256()
+
+        k.update(self.signature_string.encode())
+        return "0x" + k.hexdigest() 
+
 
 
 def get_address_as_topic(address: str):
