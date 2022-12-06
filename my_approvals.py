@@ -1,11 +1,26 @@
 # What approval?
-# approval/approve is a core concept in the interface of ERC20 token based contracts
-# The main purpose of the approval/approve concept is to let identities in the blockchain to get partial ownership capabilities over other identities' tokens.
-# when identity X approves identity Y for Z amount of tokens, the outcome of this action gives Y the ability to transfer actions on behaf of X over the Z amount of tokens.
-# Unlike a regular transfer transaction, which can be done only by the identity holding the tokens, the transferFrom transaction can be done by any identity who got approved by the identity holding the tokens.
-# Another difference is that the transferFrom has an additional limitation on what it can do and don't and it is the approved amount:
-# A regular transfer is based on recording a balance book of all participants in the token's trading game, while transferFrom is additionally based on the permited amount of tokens that can be traded based on a single approve.
-# if A approves B with an amount of 1 token, the transferFrom action B can do is limitted to 1 token.
+
+# approval/approve is a core concept in the interface of ERC20 token-based 
+# contracts.
+# The main purpose of the approval/approve concept is to let identities
+# in the blockchain to get partial ownership capabilities over other 
+# identities' tokens.
+# when identity X approves identity Y for Z amount of tokens, the outcome
+# of this action gives Y the ability to transfer actions on behaf of X over 
+# the Z amount of tokens.
+
+# Unlike a regular transfer transaction, which can be done only by the 
+# identity holding the tokens, the transferFrom transaction can be done by 
+# any identity who got approved by the identity holding the tokens.
+
+# Another difference is that the transferFrom has an additional limitation 
+# on what it can do and don't and it is the approved amount:
+
+# A regular transfer is based on recording a balance book of all participants
+# in the token's trading game, while transferFrom is additionally based on 
+# the permited amount of tokens that can be traded based on a single approve.
+# if A approves B with an amount of 1 token, the transferFrom action B can 
+# do is limitted to 1 token.
 
 import sys
 import logging
