@@ -1,4 +1,4 @@
-# web3_approvers
+# web3_approvals
 
 ## HOWTO
 ``` 
