@@ -24,7 +24,6 @@ from web3.middleware import geth_poa_middleware
 from eth_abi.codec import ABICodec
 from web3._utils.events import get_event_data
 
-
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.StreamHandler(sys.stdout))
  
@@ -51,7 +50,6 @@ E20_APPROVAL_ABI_JSON = """{
         "type": "event"
 }"""
 
-
 API_KEY = "7e135dbc63904c30808f84ff52a92343"
 
 BASE_URL = f"https://mainnet.infura.io/v3/{API_KEY}"
@@ -66,7 +64,6 @@ ADDRESS_TO_NAME_MAPPING = {
     '0x111111125434b319222CdBf8C261674aDB56F3ae': '1inch v2: Aggregation Router',
     '0xECf0bdB7B3F349AbfD68C3563678124c5e8aaea3': 'Kyber: Staking'
 }
-
 
 
 class ABIParam(pydantic.BaseModel):
@@ -86,12 +83,11 @@ class EventABI(pydantic.BaseModel):
         return f"{self.name}({params_string})"
 
     @property
-    def signature_hex(self):
+    def signature_hex(self) -> str:
         k = sha3.keccak_256()
 
         k.update(self.signature_string.encode())
         return "0x" + k.hexdigest() 
-
 
 
 def get_address_as_topic(address: str):
@@ -153,16 +149,13 @@ def main(
             spender_name = get_name_from_address(name_resolving, event_args['spender'])
             value_approved = event_args['value']
 
+            _logger.info( f"Approval on {spender_name} on amount of {value_approved}")
+
             transaction_id =  event['transactionHash']
             log_index = event['logIndex']
-
-            message = f"Approval on {spender_name} on amount of {value_approved}"
-            _logger.info(message, extra=dict(tsx_id=transaction_id))
             _logger.debug(f"transaction id: {transaction_id.hex()} " \
                           f"log_index: {log_index}")
 
 
 if __name__ == '__main__':
     typer.run(main)
-    
-    
