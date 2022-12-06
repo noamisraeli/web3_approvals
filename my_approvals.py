@@ -1,4 +1,4 @@
-# What approval?
+# What is an approval?
 
 # approval/approve is a core concept in the interface of ERC20 token-based 
 # contracts.
