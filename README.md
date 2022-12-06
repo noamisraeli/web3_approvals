@@ -3,6 +3,8 @@
 ## HOWTO
 ### Installation
 ``` 
+git clone git@github.com:noamisraeli/web3_approvals.git
+cd web3_approvals
 pip install -r requirements.txt
 ```
 ### Help
